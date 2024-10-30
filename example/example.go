@@ -9,13 +9,13 @@ import (
 func main() {
 	pool := workerpool.NewWorkerpool()
 
-	pool.AddJob("Emergency meeting")
-	pool.AddJob("Vote red")
-
 	pool.AddWorker("Amogus", time.Second)
-	pool.AddWorker("Impostor", time.Second)
+	pool.AddWorker("Sus", time.Second)
 
-	pool.AddJob("Eject red")
+	pool.DeleteWorker("Amogus")
+
+	pool.AddJob("Skjfnd")
+	pool.AddJob("Sdlmkfdn")
 
 	time.Sleep(5 * time.Second)
 }

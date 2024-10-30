@@ -39,6 +39,18 @@ func (workerpool *Workerpool) AddWorker(id string, sleepTime time.Duration) erro
 	return nil
 }
 
+func (workerpool *Workerpool) DeleteWorker(id string) error {
+	quit, contains := workerpool.quitChannels[id]
+
+	if contains {
+		quit <- true
+		delete(workerpool.quitChannels, id)
+		return nil
+	}
+
+	return errors.New("Worker " + id + " does not exist")
+}
+
 func (workerpool *Workerpool) AddJob(job string) {
 	workerpool.data <- job
 }
@@ -47,7 +59,6 @@ func (workerpool *Workerpool) worker(id string, quit <-chan bool, src <-chan str
 	for {
 		select {
 		case <-quit:
-			fmt.Println(id)
 			return
 		default:
 			job := <-src
