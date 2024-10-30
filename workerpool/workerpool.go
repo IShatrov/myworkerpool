@@ -28,7 +28,7 @@ func (workerpool *Workerpool) AddWorker(id string, sleepTime time.Duration) erro
 	_, contains := workerpool.quitChannels[id]
 
 	if contains {
-		return errors.New("Pool already contains worker with id " + id)
+		return errors.New("Pool already contains worker with id \"" + id + "\"")
 	}
 
 	quit := make(chan bool)
@@ -43,12 +43,21 @@ func (workerpool *Workerpool) DeleteWorker(id string) error {
 	quit, contains := workerpool.quitChannels[id]
 
 	if contains {
-		quit <- true
-		delete(workerpool.quitChannels, id)
+		fmt.Printf("About to delete worker \"%s\"\n", id)
+
+		select {
+		case quit <- true:
+			delete(workerpool.quitChannels, id)
+		}
+
 		return nil
 	}
 
 	return errors.New("Worker " + id + " does not exist")
+}
+
+func (workerpool *Workerpool) HasWorkers() bool {
+	return len(workerpool.quitChannels) != 0
 }
 
 func (workerpool *Workerpool) AddJob(job string) {
@@ -65,9 +74,9 @@ func (workerpool *Workerpool) worker(id string, quit <-chan bool, src <-chan str
 	for {
 		select {
 		case <-quit:
+			fmt.Printf("Deleted worker \"%s\"\n", id)
 			return
-		default:
-			job := <-src
+		case job := <- src:
 			fmt.Printf("Worker \"%s\" about to perform job \"%s\"\n", id, job)
 			time.Sleep(sleepTime)
 			fmt.Printf("Worker \"%s\" finished job \"%s\"\n", id, job)
