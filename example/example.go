@@ -9,13 +9,14 @@ import (
 func main() {
 	pool := workerpool.NewWorkerpool()
 
-	pool.AddWorker("Amogus", time.Second)
-	pool.AddWorker("Sus", time.Second)
+	pool.AddJobs([]string{"Job One", "Job Two", "Job Three"})
 
-	pool.DeleteWorker("Amogus")
+	pool.AddWorker("Worker One", time.Second)
+	pool.AddWorker("Worker Two", time.Second)
 
-	pool.AddJob("Skjfnd")
-	pool.AddJob("Sdlmkfdn")
+	pool.DeleteWorker("Worker Two")
 
-	time.Sleep(5 * time.Second)
+	pool.AddJob("Job Four")
+
+	time.Sleep(5 * time.Second) // Naive way to wait until all jobs are done
 }
