@@ -13,3 +13,7 @@ func NewWorkerpool() *Workerpool {
 
 	return &Workerpool{quitChannels, data}
 }
+
+func (workerpool *Workerpool) IsValid() bool {
+	return workerpool.quitChannels != nil && workerpool.data != nil
+}
