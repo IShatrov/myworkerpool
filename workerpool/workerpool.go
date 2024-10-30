@@ -8,7 +8,6 @@ import (
 
 const bufferSize = 10
 
-
 // A primitive worker-pool implementation.
 type Workerpool struct {
 	quitChannels map[string]chan<- bool
@@ -59,7 +58,7 @@ func (workerpool *Workerpool) DeleteWorker(id string) error {
 		return nil
 	}
 
-	return errors.New("Worker " + id + " does not exist")
+	return errors.New("Worker \"" + id + "\" does not exist")
 }
 
 // Reports whether a Workerpool has workers.
@@ -79,7 +78,6 @@ func (workerpool *Workerpool) AddJobs(jobs []string) {
 	}
 }
 
-
 // Performs a job.
 func (workerpool *Workerpool) worker(id string, quit <-chan bool, src <-chan string, sleepTime time.Duration) {
 	for {
@@ -87,7 +85,7 @@ func (workerpool *Workerpool) worker(id string, quit <-chan bool, src <-chan str
 		case <-quit:
 			fmt.Printf("Deleted worker \"%s\"\n", id)
 			return
-		case job := <- src:
+		case job := <-src:
 			fmt.Printf("Worker \"%s\" about to perform job \"%s\"\n", id, job)
 			time.Sleep(sleepTime)
 			fmt.Printf("Worker \"%s\" finished job \"%s\"\n", id, job)
