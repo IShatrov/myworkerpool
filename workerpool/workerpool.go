@@ -28,7 +28,7 @@ func (workerpool *Workerpool) AddWorker(id string, sleepTime time.Duration) erro
 	_, contains := workerpool.quitChannels[id]
 
 	if contains {
-		return errors.New("Pool already contains worker with id" + id)
+		return errors.New("Pool already contains worker with id " + id)
 	}
 
 	quit := make(chan bool)
