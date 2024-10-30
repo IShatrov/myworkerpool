@@ -55,6 +55,12 @@ func (workerpool *Workerpool) AddJob(job string) {
 	workerpool.data <- job
 }
 
+func (workerpool *Workerpool) AddJobs(jobs []string) {
+	for _, job := range jobs {
+		workerpool.AddJob(job)
+	}
+}
+
 func (workerpool *Workerpool) worker(id string, quit <-chan bool, src <-chan string, sleepTime time.Duration) {
 	for {
 		select {
